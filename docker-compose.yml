@@ -1,0 +1,96 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: pipeweave-postgres
+    environment:
+      POSTGRES_USER: pipeweave
+      POSTGRES_PASSWORD: pipeweave_dev_password
+      POSTGRES_DB: pipeweave_db
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/scripts/init_db.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pipeweave"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - pipeweave-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: pipeweave-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes --requirepass pipeweave_redis_password
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - pipeweave-network
+
+  # LocalStack for S3 emulation (development only)
+  localstack:
+    image: localstack/localstack:latest
+    container_name: pipeweave-localstack
+    ports:
+      - "4566:4566"  # LocalStack Gateway
+    environment:
+      SERVICES: s3
+      DEBUG: 1
+      DATA_DIR: /tmp/localstack/data
+      AWS_DEFAULT_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+      SKIP_SSL_CERT_DOWNLOAD: 1
+      CLEAR_TMP_FOLDER: 0
+    volumes:
+      - localstack_data:/var/lib/localstack
+      - ./backend/scripts/init_s3.sh:/etc/localstack/init/ready.d/init_s3.sh
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4566/_localstack/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - pipeweave-network
+
+  # pgAdmin for database management (optional)
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pipeweave-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@pipeweave.local
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+    networks:
+      - pipeweave-network
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  localstack_data:
+    driver: local
+  pgadmin_data:
+    driver: local
+
+networks:
+  pipeweave-network:
+    driver: bridge
