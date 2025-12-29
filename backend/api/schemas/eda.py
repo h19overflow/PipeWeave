@@ -100,3 +100,20 @@ class EDAReportResponse(BaseModel):
     )
     report_id: str = Field(description="EDA report UUID for caching")
     generated_at: datetime = Field(description="Report generation timestamp")
+
+
+class EDAJobResponse(BaseModel):
+    """Response for queued EDA generation job."""
+
+    report_id: str = Field(description="EDA report UUID")
+    job_id: str = Field(description="Celery task ID")
+    status: str = Field(description="Job status (queued, running, completed, failed)")
+
+
+class EDAStatusResponse(BaseModel):
+    """EDA job status and progress."""
+
+    status: str = Field(description="Job status")
+    progress_pct: int = Field(ge=0, le=100, description="Progress percentage")
+    step: Optional[str] = Field(default=None, description="Current step description")
+    error: Optional[str] = Field(default=None, description="Error message if failed")

@@ -13,8 +13,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from backend.api.dependencies.database import get_db
 from backend.api.dependencies.storage import get_s3_storage
 from backend.boundary.crud.dataset import dataset_crud
+from backend.boundary.crud.eda_report import eda_report_crud
 from backend.boundary.storage import S3Storage
 from backend.services.dataset import DatasetService
+from backend.services.eda.eda_service import EDAService
 from backend.services.training_service import TrainingService
 
 
@@ -68,3 +70,32 @@ async def get_training_service(
             return await service.create_training_job(...)
     """
     return TrainingService(db=db, s3_storage=s3_storage)
+
+
+async def get_eda_service(
+    db: AsyncSession = Depends(get_db),
+    s3_storage: S3Storage = Depends(get_s3_storage),
+) -> EDAService:
+    """
+    Get EDA service with injected dependencies.
+
+    Args:
+        db: Database session (injected)
+        s3_storage: S3 storage client (injected)
+
+    Returns:
+        EDAService: Configured service instance
+
+    Example:
+        @router.post("/eda/datasets/{dataset_id}/queue")
+        async def queue_eda(
+            service: EDAService = Depends(get_eda_service),
+        ):
+            return await service.queue_eda_generation(...)
+    """
+    return EDAService(
+        db=db,
+        eda_crud=eda_report_crud,
+        dataset_crud=dataset_crud,
+        s3_storage=s3_storage,
+    )

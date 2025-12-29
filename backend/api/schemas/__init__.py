@@ -31,7 +31,9 @@ from backend.api.schemas.datasets import (
 )
 from backend.api.schemas.eda import (
     ColumnStatistics,
+    EDAJobResponse,
     EDAReportResponse,
+    EDAStatusResponse,
     EDASummaryResponse,
     VisualizationMetadata,
     VisualizationType,
@@ -76,7 +78,9 @@ __all__ = [
     "DatasetUploadURLResponse",
     # EDA
     "ColumnStatistics",
+    "EDAJobResponse",
     "EDAReportResponse",
+    "EDAStatusResponse",
     "EDASummaryResponse",
     "VisualizationMetadata",
     "VisualizationType",
