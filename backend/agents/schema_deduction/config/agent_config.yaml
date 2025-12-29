@@ -1,0 +1,42 @@
+# Schema Deduction Agent Configuration
+# LangChain v1 Tool-Calling Agent Settings
+
+agent:
+  name: "schema_deduction_agent"
+  description: "AI-powered CSV schema type detection with confidence scoring"
+  version: "1.0.0"
+
+llm:
+  provider: "google_genai"
+  model: "gemini-3-flash-preview"  # Latest flash model for schema detection
+  temperature: 0.1  # Low temperature for deterministic output
+  max_tokens: 2048
+  timeout: 10  # seconds
+
+tools:
+  enabled:
+    - detect_column_type
+    - estimate_confidence
+    - suggest_datetime_format
+
+  retry:
+    max_attempts: 3
+    backoff_factor: 2
+
+output:
+  format: "structured"  # Use structured output with Pydantic
+  validate_schema: true
+
+performance:
+  max_columns_per_request: 100
+  sample_size: 10  # Number of sample values per column
+
+confidence_thresholds:
+  high: 0.90  # Auto-accept threshold
+  medium: 0.70  # Review suggested threshold
+  low: 0.70  # Manual review required below this
+
+logging:
+  level: "INFO"
+  log_tool_calls: true
+  log_llm_responses: true

@@ -1,0 +1,25 @@
+# EDA Insights Agent Configuration
+# LLM settings for AI-enhanced EDA analysis
+
+agent:
+  name: "eda_insights_agent"
+  description: "AI agent for generating insights from EDA statistics"
+
+llm:
+  provider: "google_genai"
+  model: "gemini-3-flash-preview"
+  temperature: 0.3  # Slightly creative for insights generation
+  max_tokens: 2048  # Enough for multiple insights
+  timeout: 10  # 10 seconds max for agent response
+
+tools:
+  - detect_outliers_insight
+  - analyze_class_imbalance
+  - interpret_correlations
+  - missing_value_recommendations
+  - generate_summary_recommendation
+
+execution:
+  parallel_tool_calls: true  # Execute tools concurrently
+  max_iterations: 3  # Prevent infinite loops
+  early_stopping: true  # Stop when all insights generated
