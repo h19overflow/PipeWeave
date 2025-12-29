@@ -1,0 +1,30 @@
+# Development Environment Configuration
+# ====================================
+# Used for local development and testing
+
+aws:
+  region: us-east-1
+
+pipeweave:
+  environment: development
+
+  # S3 bucket configuration
+  s3:
+    bucket_name: datasets
+    enable_versioning: true
+    enable_encryption: true
+    enable_lifecycle: false  # Keep all versions in dev
+
+  # IAM access configuration
+  iam:
+    allow_put: true
+    allow_get: true
+    allow_delete: true  # Allow cleanup in dev
+    require_encryption: false  # More lenient in dev
+
+  # Tags for resource organization
+  tags:
+    environment: development
+    managed_by: pulumi
+    cost_center: engineering
+    project: pipeweave

@@ -1,0 +1,8 @@
+name: pipeweave-iac
+runtime: python
+description: Infrastructure as Code for PipeWeave S3 storage and IAM
+
+config:
+  aws:region:
+    description: AWS region for resources
+    default: us-east-1

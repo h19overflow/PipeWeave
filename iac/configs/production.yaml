@@ -1,0 +1,31 @@
+# Production Environment Configuration
+# ======================================
+# Used for production workloads and customer data
+
+aws:
+  region: us-east-1
+
+pipeweave:
+  environment: production
+
+  # S3 bucket configuration
+  s3:
+    bucket_name: datasets
+    enable_versioning: true
+    enable_encryption: true
+    enable_lifecycle: true
+    lifecycle_days: 90  # Archive old data for compliance
+
+  # IAM access configuration
+  iam:
+    allow_put: true
+    allow_get: true
+    allow_delete: false  # Prevent accidental deletion
+    require_encryption: true  # Strict encryption requirement
+
+  # Tags for resource organization
+  tags:
+    environment: production
+    managed_by: pulumi
+    cost_center: operations
+    project: pipeweave

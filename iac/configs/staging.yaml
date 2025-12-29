@@ -1,0 +1,31 @@
+# Staging Environment Configuration
+# ===================================
+# Used for pre-production testing and validation
+
+aws:
+  region: us-east-1
+
+pipeweave:
+  environment: staging
+
+  # S3 bucket configuration
+  s3:
+    bucket_name: datasets
+    enable_versioning: true
+    enable_encryption: true
+    enable_lifecycle: true
+    lifecycle_days: 60  # Keep recent data
+
+  # IAM access configuration
+  iam:
+    allow_put: true
+    allow_get: true
+    allow_delete: true  # Allow selective cleanup
+    require_encryption: true  # Enforce encryption
+
+  # Tags for resource organization
+  tags:
+    environment: staging
+    managed_by: pulumi
+    cost_center: engineering
+    project: pipeweave

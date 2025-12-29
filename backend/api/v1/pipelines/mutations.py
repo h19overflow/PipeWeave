@@ -1,7 +1,7 @@
 """
-ML Pipeline API endpoints (v1).
+Pipeline mutation endpoints (create, update, delete).
 
-Handles pipeline creation, validation, retrieval, and deletion.
+Handles pipeline lifecycle operations.
 
 Layer: 2 (API)
 Dependencies: fastapi, backend.api.schemas
@@ -10,62 +10,19 @@ Dependencies: fastapi, backend.api.schemas
 from datetime import datetime
 
 import structlog
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status
 
 from backend.api.dependencies import get_app_settings
 from backend.api.schemas import (
     PipelineConfigRequest,
     PipelineResponse,
-    PipelineValidationResponse,
     VersionedResponse,
 )
 from backend.configuration import Settings
 
 logger = structlog.get_logger(__name__)
 
-router = APIRouter(prefix="/pipelines", tags=["Pipelines"])
-
-
-@router.post(
-    "/validate",
-    response_model=VersionedResponse[PipelineValidationResponse],
-    status_code=status.HTTP_200_OK,
-)
-async def validate_pipeline(
-    request: PipelineConfigRequest,
-    settings: Settings = Depends(get_app_settings),
-) -> VersionedResponse[PipelineValidationResponse]:
-    """
-    Validate pipeline configuration without saving.
-
-    Checks step dependencies, parameter types, and data flow logic
-    before pipeline creation.
-
-    Args:
-        request: Pipeline configuration to validate.
-        settings: Application settings.
-
-    Returns:
-        VersionedResponse containing validation result.
-    """
-    logger.info(
-        "pipeline_validation_requested",
-        pipeline_name=request.name,
-        step_count=len(request.steps),
-    )
-
-    # TODO: Phase 5 - Verify dataset exists
-    # TODO: Phase 5 - Validate step dependencies (no cycles)
-    # TODO: Phase 5 - Validate operation names against available operations
-    # TODO: Phase 5 - Validate parameter schemas for each step type
-
-    mock_response = PipelineValidationResponse(
-        valid=True,
-        errors=[],
-        warnings=[],
-    )
-
-    return VersionedResponse(data=mock_response)
+router = APIRouter()
 
 
 @router.post(
@@ -108,47 +65,6 @@ async def create_pipeline(
         dataset_id=request.dataset_id,
         steps=request.steps,
         description=request.description,
-        created_at=datetime.utcnow(),
-        updated_at=datetime.utcnow(),
-        created_by=None,
-    )
-
-    return VersionedResponse(data=mock_response)
-
-
-@router.get(
-    "/{pipeline_id}",
-    response_model=VersionedResponse[PipelineResponse],
-    status_code=status.HTTP_200_OK,
-)
-async def get_pipeline(
-    pipeline_id: str,
-    settings: Settings = Depends(get_app_settings),
-) -> VersionedResponse[PipelineResponse]:
-    """
-    Retrieve pipeline details by ID.
-
-    Args:
-        pipeline_id: Pipeline UUID.
-        settings: Application settings.
-
-    Returns:
-        VersionedResponse containing pipeline configuration.
-
-    Raises:
-        HTTPException: 404 if pipeline not found.
-    """
-    logger.info("pipeline_retrieved", pipeline_id=pipeline_id)
-
-    # TODO: Phase 5 - Query pipeline from database
-    # TODO: Phase 5 - Raise 404 if not found
-
-    mock_response = PipelineResponse(
-        id=pipeline_id,
-        name="Mock Pipeline",
-        dataset_id="mock-dataset-uuid",
-        steps=[],
-        description=None,
         created_at=datetime.utcnow(),
         updated_at=datetime.utcnow(),
         created_by=None,

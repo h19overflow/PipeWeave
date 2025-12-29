@@ -2,7 +2,7 @@
 Model Training API endpoints.
 
 Handles training job submission, status monitoring, cancellation,
-and model retrieval. SSE streaming in training_stream.py.
+and model retrieval.
 
 Layer: 2 (API)
 Dependencies: fastapi, backend.api.schemas, backend.services
@@ -24,7 +24,7 @@ from backend.api.schemas import (
     TrainingStatus,
     VersionedResponse,
 )
-from backend.api.v1.training_stream import create_training_stream
+from backend.api.v1.training.streaming import create_training_stream
 from backend.services.training_service import TrainingService
 
 
