@@ -1,0 +1,575 @@
+/* MLE Workbench Design System - Font Imports */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&family=Noto+Sans:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+
+@import "tailwindcss";
+
+/* Tailwind 4 Theme Extension for Business Rules */
+@theme {
+  /* Business Rules Color Palette */
+  --color-primary: #3713ec;
+  --color-background-dark: #131022;
+  --color-surface-dark: #1a172e;
+  --color-surface-darker: #0f0c1d;
+  --color-border-dark: #3b3267;
+  --color-text-muted: #9b92c9;
+
+  /* Pipeline Editor Color Palette */
+  --color-pe-primary: #3713ec;
+  --color-pe-primary-light: #6d52f4;
+  --color-pe-bg: #131022;
+  --color-pe-surface: #1e1b2e;
+  --color-pe-surface-alt: #141122;
+  --color-pe-border: #292348;
+  --color-pe-text-secondary: #9b92c9;
+  --color-pe-canvas: #0f0c1d;
+  --color-pe-success: #22c55e;
+  --color-pe-warning: #facc15;
+  --color-pe-error: #ef4444;
+
+  /* Font Families */
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-body: 'Noto Sans', sans-serif;
+}
+
+@layer base {
+  :root {
+    /* MLE Workbench Color Palette */
+    --obsidian: #020617;
+    --slate-900: #0f172a;
+    --slate-800: #1e293b;
+    --slate-700: #334155;
+    --slate-600: #475569;
+    --slate-500: #64748b;
+    --slate-400: #94a3b8;
+    --slate-300: #cbd5e1;
+    --slate-200: #e2e8f0;
+
+    --primary: #5a5cf2;
+    --primary-glow: rgba(90, 92, 242, 0.5);
+    --primary-dark: #312e81;
+    --indigo-300: #a5b4fc;
+    --indigo-900: #312e81;
+
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+
+    --radius: 0.5rem;
+
+    /* Schema Deduction Theme (Dark Purple) */
+    --schema-primary: #3713ec;
+    --schema-primary-glow: rgba(55, 19, 236, 0.5);
+    --schema-bg-dark: #131022;
+    --schema-surface: #1e1933;
+    --schema-surface-alt: #141122;
+    --schema-border: #3b3267;
+    --schema-text-secondary: #9b92c9;
+    --schema-canvas: #0f0c1d;
+
+    /* Pipeline Editor Theme */
+    --pe-primary: #3713ec;
+    --pe-primary-light: #6d52f4;
+    --pe-primary-glow: rgba(55, 19, 236, 0.5);
+    --pe-bg: #131022;
+    --pe-surface: #1e1b2e;
+    --pe-surface-alt: #141122;
+    --pe-border: #292348;
+    --pe-text-secondary: #9b92c9;
+    --pe-canvas: #0f0c1d;
+    --pe-success: #22c55e;
+    --pe-warning: #facc15;
+    --pe-error: #ef4444;
+  }
+
+  * {
+    border-color: var(--slate-800);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Space Grotesk', sans-serif;
+    background-color: var(--obsidian);
+    color: var(--slate-200);
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background-color: var(--primary);
+    color: white;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--obsidian);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--slate-800);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--slate-700);
+  }
+}
+
+@layer utilities {
+  /* GPU Acceleration Utilities for 60fps animations */
+  .gpu-accelerated {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+
+  .will-change-transform {
+    will-change: transform;
+  }
+
+  .will-change-auto {
+    will-change: auto;
+  }
+
+  /* Disable pointer events during drag for performance */
+  .pointer-events-none-during-drag {
+    touch-action: none;
+  }
+
+  /* Smooth transform transitions */
+  .transition-transform-smooth {
+    transition-property: transform;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
+  }
+
+  /* Font Classes */
+  .font-display {
+    font-family: 'Space Grotesk', sans-serif;
+  }
+
+  .font-mono {
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* Background Patterns */
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, var(--slate-800) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--slate-800) 1px, transparent 1px);
+    background-size: 40px 40px;
+    mask-image: linear-gradient(to bottom, transparent, 5%, white, 95%, transparent);
+  }
+
+  /* Glass Panel Effect */
+  .glass-panel {
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* Shadow Utilities */
+  .shadow-hard {
+    box-shadow: 4px 4px 0px 0px var(--slate-800);
+  }
+
+  .shadow-hard-primary {
+    box-shadow: 4px 4px 0px 0px var(--primary-dark);
+  }
+
+  .shadow-glow {
+    box-shadow: 0 0 15px var(--primary-glow);
+  }
+
+  .shadow-glow-lg {
+    box-shadow: 0 0 25px var(--primary-glow);
+  }
+
+  /* Typing Cursor Animation */
+  .typing-cursor::after {
+    content: '\2588';
+    animation: blink 1s step-end infinite;
+    color: var(--primary);
+    margin-left: 2px;
+  }
+
+  /* Text Gradient */
+  .text-gradient {
+    background: linear-gradient(to right, var(--primary), var(--indigo-300));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Glow Text */
+  .text-glow {
+    text-shadow: 0 0 20px var(--primary-glow);
+  }
+
+  /* Node Connector Styles */
+  .node-connector {
+    position: absolute;
+    background-color: var(--slate-700);
+    z-index: 0;
+  }
+
+  .node-connector.active {
+    background-color: var(--primary);
+    box-shadow: 0 0 8px rgba(90, 92, 242, 0.6);
+  }
+}
+
+@layer components {
+  /* Status Indicator */
+  .status-dot {
+    @apply size-2 rounded-full;
+  }
+
+  .status-dot.online {
+    background-color: var(--success);
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+  }
+
+  /* Badge Styles */
+  .badge-primary {
+    @apply px-2 py-1 rounded text-xs font-mono font-bold;
+    color: var(--primary);
+    border: 1px solid rgba(90, 92, 242, 0.3);
+    background: rgba(90, 92, 242, 0.1);
+  }
+}
+
+/* Animations */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: -100;
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 15px var(--primary-glow); }
+  50% { box-shadow: 0 0 30px var(--primary-glow); }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .typing-cursor::after {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+/* Schema Deduction Page Styles */
+.schema-page {
+  --scrollbar-track: #141122;
+  --scrollbar-thumb: #3b3267;
+  --scrollbar-thumb-hover: #554a96;
+}
+
+.schema-page::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.schema-page::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+.schema-page::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 3px;
+}
+
+.schema-page::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
+
+/* Schema Glass Panel */
+.schema-glass-panel {
+  background: rgba(30, 25, 51, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Schema Primary Glow */
+.schema-glow {
+  box-shadow: 0 0 15px var(--schema-primary-glow);
+}
+
+.schema-glow-lg {
+  box-shadow: 0 0 25px var(--schema-primary-glow);
+}
+
+/* Pulse Animation for Status Indicators */
+@keyframes schema-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
+}
+
+.schema-pulse {
+  animation: schema-pulse 2s ease-in-out infinite;
+}
+
+/* Active Stage Glow Animation */
+@keyframes stage-glow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(55, 19, 236, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(55, 19, 236, 0.9);
+  }
+}
+
+.stage-active-glow {
+  animation: stage-glow 2s ease-in-out infinite;
+}
+
+/* Business Rule Injection Page Theme */
+.business-rules-page {
+  --primary: #3713ec;
+  --background-dark: #131022;
+  --surface-dark: #1a172e;
+  --surface-darker: #0f0c1d;
+  --border-dark: #3b3267;
+  --text-muted: #9b92c9;
+}
+
+/* Glass Panel for Business Rules */
+.business-glass-panel {
+  background: rgba(26, 23, 46, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(59, 50, 103, 0.5);
+}
+
+/* Business Rules Scrollbar */
+.business-rules-page::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.business-rules-page::-webkit-scrollbar-track {
+  background: #131022;
+}
+
+.business-rules-page::-webkit-scrollbar-thumb {
+  background: #3b3267;
+  border-radius: 3px;
+}
+
+.business-rules-page::-webkit-scrollbar-thumb:hover {
+  background: #4f4485;
+}
+
+/* Terminal Cursor Blink for Rule Composer */
+@keyframes terminal-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.terminal-cursor::after {
+  content: '\2588';
+  animation: terminal-blink 1s step-end infinite;
+  color: #3713ec;
+  margin-left: 2px;
+}
+
+/* Toggle Switch Active Glow */
+.toggle-active-glow {
+  box-shadow: 0 0 10px rgba(55, 19, 236, 0.5);
+}
+
+/* Excluded Bar Pulse Animation */
+@keyframes excluded-pulse {
+  0%, 100% {
+    border-color: rgba(239, 68, 68, 0.3);
+    background-color: rgba(239, 68, 68, 0.05);
+  }
+  50% {
+    border-color: rgba(239, 68, 68, 0.5);
+    background-color: rgba(239, 68, 68, 0.1);
+  }
+}
+
+.excluded-bar-pulse {
+  animation: excluded-pulse 2s ease-in-out infinite;
+}
+
+/* Progress Bar Pulse */
+@keyframes progress-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.progress-pulse {
+  animation: progress-pulse 1.5s ease-in-out infinite;
+}
+
+/* Pipeline Editor Page Theme */
+.pe-page {
+  --scrollbar-track: #131022;
+  --scrollbar-thumb: #3b3267;
+  --scrollbar-thumb-hover: #554a96;
+}
+
+.pe-page::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.pe-page::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+.pe-page::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 3px;
+}
+
+.pe-page::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
+
+/* Pipeline Editor Glass Panel */
+.pe-glass-panel {
+  background: rgba(20, 17, 34, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Pipeline Editor Glow Effects */
+.pe-glow {
+  box-shadow: 0 0 15px var(--pe-primary-glow);
+}
+
+.pe-glow-lg {
+  box-shadow: 0 0 25px var(--pe-primary-glow);
+}
+
+/* Pipeline Node Connector Animation */
+@keyframes pe-dash {
+  to {
+    stroke-dashoffset: -1000;
+  }
+}
+
+.pe-connector-path {
+  fill: none;
+  stroke: #5b4d8c;
+  stroke-width: 2;
+  stroke-dasharray: 8, 6;
+  stroke-linecap: round;
+  animation: pe-dash 40s linear infinite;
+  /* GPU acceleration for SVG paths */
+  will-change: d;
+}
+
+.pe-connector-path.active {
+  stroke: var(--pe-primary);
+  stroke-dasharray: none;
+  stroke-width: 3;
+  filter: drop-shadow(0 0 6px var(--pe-primary-glow));
+}
+
+/* Immediate path updates during drag */
+.pe-connector-path.dragging {
+  will-change: auto;
+  animation: none;
+}
+
+/* Smooth path transition when not dragging */
+.pe-connector-path.smooth-transition {
+  transition: d 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Pipeline Node Status Dot Glow */
+.pe-status-dot-glow {
+  box-shadow: 0 0 8px currentColor;
+}
+
+/* Pipeline Node Pulse Animation */
+@keyframes pe-node-pulse {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(55, 19, 236, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(55, 19, 236, 0.3);
+  }
+}
+
+.pe-node-active-pulse {
+  animation: pe-node-pulse 2s ease-in-out infinite;
+}
+
+/* Pipeline Editor Shimmer Effect */
+@keyframes pe-shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(200%);
+  }
+}
+
+.pe-shimmer {
+  animation: pe-shimmer 3s ease-in-out infinite;
+}
+
+/* Pipeline Button Ripple Effect */
+@keyframes pe-ripple {
+  0% {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+.pe-ripple::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+  transform: scale(0);
+  opacity: 0;
+}
+
+.pe-ripple:active::after {
+  animation: pe-ripple 0.6s ease-out;
+}
