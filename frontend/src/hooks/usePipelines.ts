@@ -1,13 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { pipelinesApi } from '@/services/api';
+import { pipelinesApi, type CreatePipelineRequest } from '@/services/api/pipelines';
 import type { PipelineConfig } from '@/types/api';
-
-export function usePipelines(page = 1, limit = 10) {
-  return useQuery({
-    queryKey: ['pipelines', page, limit],
-    queryFn: () => pipelinesApi.list(page, limit),
-  });
-}
 
 export function usePipeline(id: string) {
   return useQuery({
@@ -17,23 +10,29 @@ export function usePipeline(id: string) {
   });
 }
 
+export function useValidatePipeline() {
+  return useMutation({
+    mutationFn: (config: PipelineConfig) => pipelinesApi.validate(config),
+  });
+}
+
 export function useCreatePipeline() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ datasetId, config }: { datasetId: string; config: PipelineConfig }) =>
-      pipelinesApi.create(datasetId, config),
+    mutationFn: (request: CreatePipelineRequest) => pipelinesApi.create(request),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['pipelines'] });
     },
   });
 }
 
-export function useRunPipeline() {
+export function useUpdatePipeline() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) => pipelinesApi.run(id),
+    mutationFn: ({ id, config }: { id: string; config: PipelineConfig }) =>
+      pipelinesApi.update(id, config),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['pipelines'] });
     },

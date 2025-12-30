@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { datasetsApi } from '@/services/api';
+import { datasetsApi } from '@/services/api/datasets';
 
 export function useDatasets(page = 1, limit = 10) {
   return useQuery({
@@ -18,14 +19,26 @@ export function useDataset(id: string) {
 
 export function useUploadDataset() {
   const queryClient = useQueryClient();
+  const [progress, setProgress] = useState(0);
 
-  return useMutation({
-    mutationFn: ({ file, name }: { file: File; name?: string }) =>
-      datasetsApi.upload(file, name),
+  const mutation = useMutation({
+    mutationFn: async (file: File) => {
+      setProgress(0);
+      return datasetsApi.upload(file, setProgress);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['datasets'] });
+      setProgress(0);
+    },
+    onError: () => {
+      setProgress(0);
     },
   });
+
+  return {
+    ...mutation,
+    progress,
+  };
 }
 
 export function useDeleteDataset() {
@@ -36,13 +49,5 @@ export function useDeleteDataset() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['datasets'] });
     },
-  });
-}
-
-export function useDatasetEda(id: string) {
-  return useQuery({
-    queryKey: ['dataset', id, 'eda'],
-    queryFn: () => datasetsApi.getEda(id),
-    enabled: !!id,
   });
 }

@@ -78,3 +78,77 @@ export interface ModelMetrics {
   r2?: number;
   feature_importance: Record<string, number>;
 }
+
+// Training types
+export type TrainingStatus = 'queued' | 'running' | 'completed' | 'failed' | 'cancelled';
+
+export interface HyperparameterConfig {
+  learning_rate?: number;
+  batch_size?: number;
+  epochs?: number;
+  custom_params?: Record<string, unknown>;
+}
+
+export interface TrainingJobRequest {
+  pipeline_id: string;
+  model_type: string;
+  hyperparameters?: HyperparameterConfig;
+  validation_split?: number;
+  experiment_name?: string;
+}
+
+export interface TrainingMetrics {
+  train_accuracy?: number;
+  val_accuracy?: number;
+  train_loss?: number;
+  val_loss?: number;
+  custom_metrics?: Record<string, number>;
+}
+
+export interface TrainingJobStatus {
+  job_id: string;
+  pipeline_id: string;
+  status: TrainingStatus;
+  progress_percentage?: number;
+  started_at?: string;
+  completed_at?: string;
+  error_message?: string;
+}
+
+export interface TrainingJobMetrics {
+  job_id: string;
+  metrics: TrainingMetrics;
+  model_artifact_url?: string;
+  generated_at: string;
+}
+
+// EDA types
+export interface EDAJobResponse {
+  report_id: string;
+  job_id: string;
+  status: string;
+}
+
+export interface EDAStatusResponse {
+  status: string;
+  progress_pct: number;
+  step?: string;
+  error?: string;
+}
+
+// Dataset upload types
+export interface DatasetUploadURLRequest {
+  filename: string;
+  content_type?: string;
+  size_bytes: number;
+}
+
+export interface DatasetUploadURLResponse {
+  upload_url: string;
+  dataset_id: string;
+  expires_at: string;
+}
+
+export interface DatasetCompleteRequest {
+  file_hash: string;
+}

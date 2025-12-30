@@ -32,22 +32,27 @@ apiClient.interceptors.response.use(
   }
 );
 
+interface VersionedResponse<T> {
+  version: string;
+  data: T;
+}
+
 export async function get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
-  const response = await apiClient.get<T>(url, config);
-  return response.data;
+  const response = await apiClient.get<VersionedResponse<T>>(url, config);
+  return response.data.data;
 }
 
 export async function post<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
-  const response = await apiClient.post<T>(url, data, config);
-  return response.data;
+  const response = await apiClient.post<VersionedResponse<T>>(url, data, config);
+  return response.data.data;
 }
 
 export async function put<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
-  const response = await apiClient.put<T>(url, data, config);
-  return response.data;
+  const response = await apiClient.put<VersionedResponse<T>>(url, data, config);
+  return response.data.data;
 }
 
 export async function del<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
-  const response = await apiClient.delete<T>(url, config);
-  return response.data;
+  const response = await apiClient.delete<VersionedResponse<T>>(url, config);
+  return response.data.data;
 }

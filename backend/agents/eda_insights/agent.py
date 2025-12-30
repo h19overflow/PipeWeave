@@ -47,8 +47,6 @@ class EDAInsightAgent:
         return ChatGoogleGenerativeAI(
             model=self.config.llm.model,
             temperature=self.config.llm.temperature,
-            max_tokens=self.config.llm.max_tokens,
-            timeout=self.config.llm.timeout,
             google_api_key=api_key,
         )
 

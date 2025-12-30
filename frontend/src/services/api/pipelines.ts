@@ -1,22 +1,31 @@
 import { get, post, put, del } from './client';
-import type { Pipeline, PipelineConfig, PaginatedResponse } from '@/types/api';
+import type { Pipeline, PipelineConfig } from '@/types/api';
+
+export interface PipelineValidationResult {
+  valid: boolean;
+  errors?: string[];
+  warnings?: string[];
+}
+
+export interface CreatePipelineRequest {
+  name: string;
+  dataset_id: string;
+  config: PipelineConfig;
+}
 
 export const pipelinesApi = {
-  list: (page = 1, limit = 10) =>
-    get<PaginatedResponse<Pipeline>>(`/pipelines?page=${page}&limit=${limit}`),
+  validate: (config: PipelineConfig) =>
+    post<PipelineValidationResult>('/api/v1/pipelines/validate', { config }),
+
+  create: (request: CreatePipelineRequest) =>
+    post<Pipeline>('/api/v1/pipelines', request),
 
   get: (id: string) =>
-    get<Pipeline>(`/pipelines/${id}`),
+    get<Pipeline>(`/api/v1/pipelines/${id}`),
 
-  create: (datasetId: string, config: PipelineConfig) =>
-    post<Pipeline>('/pipelines', { dataset_id: datasetId, config }),
-
-  update: (id: string, config: Partial<PipelineConfig>) =>
-    put<Pipeline>(`/pipelines/${id}`, { config }),
+  update: (id: string, config: PipelineConfig) =>
+    put<Pipeline>(`/api/v1/pipelines/${id}`, { config }),
 
   delete: (id: string) =>
-    del<void>(`/pipelines/${id}`),
-
-  run: (id: string) =>
-    post<{ job_id: string }>(`/pipelines/${id}/run`),
+    del<void>(`/api/v1/pipelines/${id}`),
 };

@@ -1,26 +1,71 @@
+import axios from 'axios';
 import { get, post, del } from './client';
-import type { Dataset, DatasetUploadResponse, PaginatedResponse } from '@/types/api';
+import type {
+  Dataset,
+  PaginatedResponse,
+  DatasetUploadURLRequest,
+  DatasetUploadURLResponse,
+  DatasetCompleteRequest,
+} from '@/types/api';
+
+async function calculateFileHash(file: File): Promise<string> {
+  const buffer = await file.arrayBuffer();
+  const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
 
 export const datasetsApi = {
   list: (page = 1, limit = 10) =>
-    get<PaginatedResponse<Dataset>>(`/datasets?page=${page}&limit=${limit}`),
+    get<PaginatedResponse<Dataset>>(`/api/v1/datasets?page=${page}&limit=${limit}`),
 
   get: (id: string) =>
-    get<Dataset>(`/datasets/${id}`),
+    get<Dataset>(`/api/v1/datasets/${id}`),
 
-  upload: async (file: File, name?: string) => {
-    const formData = new FormData();
-    formData.append('file', file);
-    if (name) formData.append('name', name);
+  requestUploadUrl: (request: DatasetUploadURLRequest) =>
+    post<DatasetUploadURLResponse>('/api/v1/datasets/upload-url', request),
 
-    return post<DatasetUploadResponse>('/datasets/upload', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
+  uploadToS3: async (uploadUrl: string, file: File) => {
+    await axios.put(uploadUrl, file, {
+      headers: {
+        'Content-Type': file.type || 'text/csv',
+      },
     });
   },
 
-  delete: (id: string) =>
-    del<void>(`/datasets/${id}`),
+  completeUpload: async (datasetId: string, fileHash: string) =>
+    post<Dataset>(`/api/v1/datasets/${datasetId}/complete`, {
+      file_hash: fileHash,
+    } as DatasetCompleteRequest),
 
-  getEda: (id: string) =>
-    get<Record<string, unknown>>(`/datasets/${id}/eda`),
+  upload: async (
+    file: File,
+    onProgress?: (progress: number) => void
+  ): Promise<Dataset> => {
+    onProgress?.(0);
+
+    const uploadUrlResponse = await datasetsApi.requestUploadUrl({
+      filename: file.name,
+      content_type: file.type || 'text/csv',
+      size_bytes: file.size,
+    });
+    onProgress?.(20);
+
+    await datasetsApi.uploadToS3(uploadUrlResponse.upload_url, file);
+    onProgress?.(80);
+
+    const fileHash = await calculateFileHash(file);
+    onProgress?.(90);
+
+    const dataset = await datasetsApi.completeUpload(
+      uploadUrlResponse.dataset_id,
+      fileHash
+    );
+    onProgress?.(100);
+
+    return dataset;
+  },
+
+  delete: (id: string) =>
+    del<void>(`/api/v1/datasets/${id}`),
 };
